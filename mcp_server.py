@@ -34,14 +34,14 @@ async def get_packages(tracking_number: int) -> dict:
     return packages.model_dump(mode="json")
 
 @mcp.tool
-async def get_events(tracking_number: int) -> dict:
+async def get_events(tracking_number: int) -> list:
     '''Get the name, country, city and postal code of the Sender'''
     try:
         data = await dbs_reader.get_data(tracking_number)
     except Exception as exc:
         raise RuntimeError(f"failed to fetch tracking data: {exc}")
     events = dbs_reader.get_events(data)
-    return events.model_dump(mode="json")
+    return [e.model_dump(mode="json") for e in events]
 
 @mcp.tool
 async def get_sender(tracking_number: int) -> dict:
