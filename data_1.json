@@ -1,12 +1,12 @@
 {
-    "sttNumber": "SENYB550963616",
+    "sttNumber": "SENYB550963155",
     "references": {
         "shipper": [
-            "102735 - Tomas / 102735"
+            "102274 - Tomas / 102274"
         ],
         "consignee": [],
         "waybillAndConsignementNumbers": [
-            "1806273700"
+            "1806203236"
         ],
         "additionalReferences": [],
         "originalStt": null
@@ -18,7 +18,7 @@
             "unit": "CBM"
         },
         "weight": {
-            "value": 0.25,
+            "value": 1.1,
             "unit": "KGS"
         },
         "dimensions": [],
@@ -34,8 +34,8 @@
     "events": [
         {
             "code": "ENT",
-            "date": "2025-12-10T16:07:00Z",
-            "createdAt": "2025-12-10T16:07:00Z",
+            "date": "2025-12-10T13:47:00Z",
+            "createdAt": "2025-12-10T13:47:00Z",
             "location": {
                 "name": "Nybro",
                 "code": "NYB",
@@ -48,8 +48,8 @@
         },
         {
             "code": "COL",
-            "date": "2025-12-11T14:00:00Z",
-            "createdAt": "2025-12-11T14:00:00Z",
+            "date": "2025-12-10T14:00:00Z",
+            "createdAt": "2025-12-10T14:00:00Z",
             "location": {
                 "name": "Nybro",
                 "code": "NYB",
@@ -62,8 +62,8 @@
         },
         {
             "code": "ENM",
-            "date": "2025-12-11T14:01:00Z",
-            "createdAt": "2025-12-11T14:01:00Z",
+            "date": "2025-12-10T14:01:00Z",
+            "createdAt": "2025-12-10T14:01:00Z",
             "location": {
                 "name": "Nybro",
                 "code": "NYB",
@@ -76,8 +76,8 @@
         },
         {
             "code": "MAN",
-            "date": "2025-12-11T15:40:00Z",
-            "createdAt": "2025-12-11T15:40:00Z",
+            "date": "2025-12-10T15:45:00Z",
+            "createdAt": "2025-12-10T15:45:00Z",
             "location": {
                 "name": "Nybro",
                 "code": "NYB",
@@ -89,12 +89,31 @@
             "shellIconName": null
         },
         {
-            "code": "ENM",
-            "date": "2025-12-12T02:14:00Z",
-            "createdAt": "2025-12-12T02:14:00Z",
+            "code": "DIS",
+            "date": "2025-12-10T15:52:00Z",
+            "createdAt": "2025-12-10T15:52:00Z",
             "location": {
-                "name": "Stockholm",
-                "code": "STO",
+                "name": "Jönköping",
+                "code": "JKG",
+                "countryCode": "SE"
+            },
+            "comment": "To Consignee's Disposal",
+            "recipient": null,
+            "reasons": [
+                {
+                    "code": "PA",
+                    "description": "Pre-advice initiated"
+                }
+            ],
+            "shellIconName": null
+        },
+        {
+            "code": "ENM",
+            "date": "2025-12-10T22:42:00Z",
+            "createdAt": "2025-12-10T22:42:00Z",
+            "location": {
+                "name": "Jönköping",
+                "code": "JKG",
                 "countryCode": "SE"
             },
             "comment": "Arrived",
@@ -104,11 +123,11 @@
         },
         {
             "code": "DOT",
-            "date": "2025-12-12T08:52:00Z",
-            "createdAt": "2025-12-12T08:52:00Z",
+            "date": "2025-12-11T07:16:00Z",
+            "createdAt": "2025-12-11T07:16:00Z",
             "location": {
-                "name": "Stockholm",
-                "code": "STO",
+                "name": "Jönköping",
+                "code": "JKG",
                 "countryCode": "SE"
             },
             "comment": "Out for Delivery",
@@ -117,48 +136,92 @@
             "shellIconName": null
         },
         {
-            "code": "DLV",
-            "date": "2025-12-12T11:55:00Z",
-            "createdAt": "2025-12-12T11:55:00Z",
+            "code": "NDL",
+            "date": "2025-12-11T10:53:00Z",
+            "createdAt": "2025-12-11T10:53:00Z",
             "location": {
-                "name": "Stockholm",
-                "code": "STO",
+                "name": "Tranås",
+                "code": "JKG",
+                "countryCode": "SE"
+            },
+            "comment": "Not Delivered",
+            "recipient": null,
+            "reasons": [
+                {
+                    "code": "CC",
+                    "description": "Conditions by Consignee"
+                }
+            ],
+            "shellIconName": null
+        },
+        {
+            "code": "DLV",
+            "date": "2025-12-11T12:03:00Z",
+            "createdAt": "2025-12-11T12:03:00Z",
+            "location": {
+                "name": "Tranås",
+                "code": "JKG",
                 "countryCode": "SE"
             },
             "comment": "Delivered",
             "recipient": null,
             "reasons": [],
             "shellIconName": null
+        },
+        {
+            "code": "DIS",
+            "date": "2025-12-11T14:38:00Z",
+            "createdAt": "2025-12-11T14:38:00Z",
+            "location": {
+                "name": "Jönköping",
+                "code": "JKG",
+                "countryCode": "SE"
+            },
+            "comment": "To Consignee's Disposal",
+            "recipient": null,
+            "reasons": [
+                {
+                    "code": "PF",
+                    "description": "Pre-advice Finalised"
+                }
+            ],
+            "shellIconName": null
         }
     ],
     "combiterms": null,
     "packages": [
         {
-            "id": "573313432170027110",
+            "id": "573313432169938373",
             "events": [
                 {
                     "code": "COL",
                     "countryCode": "SE",
                     "location": "Nybro",
-                    "date": "2025-12-11T14:00:00Z"
+                    "date": "2025-12-10T14:00:00Z"
+                },
+                {
+                    "code": "COL",
+                    "countryCode": "SE",
+                    "location": "Nybro",
+                    "date": "2025-12-10T14:00:00Z"
                 },
                 {
                     "code": "ENM",
                     "countryCode": "SE",
                     "location": "Nybro",
-                    "date": "2025-12-11T14:01:00Z"
+                    "date": "2025-12-10T14:01:00Z"
                 },
                 {
                     "code": "MAN",
                     "countryCode": "SE",
                     "location": "Nybro",
-                    "date": "2025-12-11T15:40:00Z"
+                    "date": "2025-12-10T15:45:00Z"
                 },
                 {
                     "code": "ENM",
                     "countryCode": "SE",
-                    "location": "Stockholm",
-                    "date": "2025-12-12T02:14:00Z"
+                    "location": "Jönköping",
+                    "date": "2025-12-10T22:42:00Z"
                 }
             ]
         }
@@ -167,8 +230,8 @@
     "service": null,
     "services": [],
     "deliveryDate": {
-        "estimated": "2025-12-12T00:00:00Z",
-        "agreed": null
+        "estimated": "2025-12-11T00:00:00Z",
+        "agreed": "2025-12-11T00:00:00Z"
     },
     "transportMode": "LAND",
     "progressBar": {
@@ -191,8 +254,8 @@
         "deliverTo": {
             "countryCode": "SE",
             "country": "Sweden",
-            "city": "Stockholm",
-            "postCode": "11666"
+            "city": "Tranås",
+            "postCode": "57335"
         },
         "shipperPlace": {
             "countryCode": "SE",
@@ -203,8 +266,8 @@
         "consigneePlace": {
             "countryCode": "SE",
             "country": "Sweden",
-            "city": "Stockholm",
-            "postCode": "11666"
+            "city": "Tranås",
+            "postCode": "57335"
         },
         "dispatchingOffice": {
             "countryCode": "SE",
@@ -214,7 +277,7 @@
         "receivingOffice": {
             "countryCode": "SE",
             "country": "Sweden",
-            "city": "Stockholm"
+            "city": "Jönköping"
         }
     },
     "transportUnits": null
