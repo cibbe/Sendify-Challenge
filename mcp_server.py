@@ -15,7 +15,7 @@ async def get_sender(tracking_number: int) -> dict:
 
 @mcp.tool
 async def get_receiver(tracking_number: int) -> dict:
-    '''Get the name, country, city and postal code of the Sender'''
+    '''Get the name, country, city and postal code of the Reciever'''
     try:
         data = await dbs_reader.get_data(tracking_number)
     except Exception as exc:
@@ -25,7 +25,7 @@ async def get_receiver(tracking_number: int) -> dict:
 
 @mcp.tool
 async def get_packages(tracking_number: int) -> dict:
-    '''Get the name, country, city and postal code of the Sender'''
+    '''Get information about the packages'''
     try:
         data = await dbs_reader.get_data(tracking_number)
     except Exception as exc:
@@ -35,7 +35,7 @@ async def get_packages(tracking_number: int) -> dict:
 
 @mcp.tool
 async def get_events(tracking_number: int) -> list:
-    '''Get the name, country, city and postal code of the Sender'''
+    '''Get a list of tracking events'''
     try:
         data = await dbs_reader.get_data(tracking_number)
     except Exception as exc:
@@ -44,14 +44,22 @@ async def get_events(tracking_number: int) -> list:
     return [e.model_dump(mode="json") for e in events]
 
 @mcp.tool
-async def get_sender(tracking_number: int) -> dict:
-    '''Get the name, country, city and postal code of the Sender'''
+async def get_info(tracking_number: int) -> dict:
+    '''Get all shipment info'''
     try:
         data = await dbs_reader.get_data(tracking_number)
     except Exception as exc:
         raise RuntimeError(f"failed to fetch tracking data: {exc}")
+    info = {}
     sender = dbs_reader.get_sender(data)
-    return sender.model_dump(mode="json")
+    receiver = dbs_reader.get_reciever(data)
+    packages = dbs_reader.get_packages(data)
+    events = dbs_reader.get_events(data)
+    info["sender"] = sender.model_dump(mode="json")
+    info["reciever"] = receiver.model_dump(mode="json")
+    info["packages"] = packages.model_dump(mode="json")
+    info["events"] = [e.model_dump(mode="json") for e in events]
+    return info
 
 if __name__ == "__main__":
     mcp.run_async()
