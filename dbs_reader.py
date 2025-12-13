@@ -1,5 +1,6 @@
 import json
-from playwright.sync_api import sync_playwright
+import asyncio
+from playwright.async_api import async_playwright
 from dataclasses import dataclass
 from datetime import datetime
 from typing import Optional
@@ -48,27 +49,27 @@ class Event(BaseModel):
 # Bonus: Individual tracking events per package
 
 # OUTPUT_FILE = "data.json"
-def get_data(tracking_id):
-    with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True)
-        page = browser.new_page()
+async def get_data(tracking_id: int) -> Any:
+    async with async_playwright() as p:
+        browser = await p.chromium.launch(headless=True)
+        page = await browser.new_page()
 
-        with page.expect_response(
+        async with page.expect_response(
             lambda r: "tracking-public/shipments/land/" in r.url and r.status == 200,
             timeout=30_000
         ) as resp_info:
-            page.goto(
+            await page.goto(
                 f"https://www.dbschenker.com/app/tracking-public/?refNumber={tracking_id}",
                 wait_until="domcontentloaded"
             )
 
-        response = resp_info.value
-        data = response.json()
+        response = await resp_info.value
+        data = await response.json()
 
-        browser.close()
+        await browser.close()
         return data
 
-def get_sender(data):
+def get_sender(data: Any) -> Sender:
     name = None
     names= data.get("references", {}).get("shipper")
     if len(names) == 1: name = names[0]
@@ -87,7 +88,7 @@ def get_sender(data):
         postcode=postcode,
         )
 
-def get_reciever(data):
+def get_reciever(data: Any) -> Receiver:
     name = None
     deliver = data.get("location", {}).get("deliverTo", {})
     country = deliver.get("country")
@@ -101,7 +102,7 @@ def get_reciever(data):
         postcode=postcode,
         )
 
-def get_packages(data):
+def get_packages(data: Any) -> Packages:
     pieces = data.get("goods", {}).get("pieces")
     weight = data.get("goods", {}).get("weight", {}).get("value")
     weight_unit = data.get("goods", {}).get("weight", {}).get("unit")
@@ -120,7 +121,7 @@ def get_packages(data):
         loading_meters_unit=loading_meters_unit,
     )
 
-def get_events(data):
+def get_events(data: Any) -> list[Event]:
     raw_events = data.get("events")
     events = []
     for raw_event in raw_events:
