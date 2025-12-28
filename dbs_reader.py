@@ -1,10 +1,8 @@
 import asyncio
 from playwright.async_api import async_playwright
 from datetime import datetime
-from typing import Optional
-from pydantic import BaseModel,ConfigDict
-from typing import Any, Optional
-from datetime import datetime
+from typing import Optional, Any
+from pydantic import BaseModel, ConfigDict
 
 # Sender information (name, address)
 class Sender(BaseModel):
@@ -42,8 +40,6 @@ class Event(BaseModel):
     comment: Optional[str] = None
     reasons: Optional[list[str]] = None
 
-# Bonus: Individual tracking events per package
-
 # OUTPUT_FILE = "data.json"
 async def get_data(tracking_id: int) -> Any:
     async with async_playwright() as p:
@@ -67,24 +63,23 @@ async def get_data(tracking_id: int) -> Any:
 
 def get_sender(data: Any) -> Sender:
     name = None
-    names= data.get("references", {}).get("shipper")
-    if len(names) == 1: name = names[0]
+    names = data.get("references", {}).get("shipper")
+    if names and len(names) == 1:
+        name = names[0]
     
     collect = data.get("location", {}).get("collectFrom", {})
     country = collect.get("country")
     city = collect.get("city")
     postcode = collect.get("postCode")
 
-    # print(collect)
-    # print(name, country, city, postcode)
     return Sender(
         name=name, 
         country=country,
         city=city,
         postcode=postcode,
-        )
+    )
 
-def get_reciever(data: Any) -> Receiver:
+def get_receiver(data: Any) -> Receiver:
     name = None
     deliver = data.get("location", {}).get("deliverTo", {})
     country = deliver.get("country")
@@ -118,20 +113,23 @@ def get_packages(data: Any) -> Packages:
     )
 
 def get_events(data: Any) -> list[Event]:
-    raw_events = data.get("events")
+    raw_events = data.get("events", [])
     events = []
     for raw_event in raw_events:
-        date = raw_event.get("date")
+        date_str = raw_event.get("date")
+        dt = None
+        if date_str:
+            try:
+                dt = datetime.fromisoformat(date_str.replace('Z', '+00:00'))
+            except ValueError:
+                pass  # Keep as None if parsing fails
         city = raw_event.get("location", {}).get("name")
         country_code = raw_event.get("location", {}).get("countryCode")
         comment = raw_event.get("comment")
-        raw_reasons = raw_event.get("reasons")
-        reasons = []
-        for raw_reason in raw_reasons:
-            reasons.append(raw_reason.get("description"))
-        # print(date, city, country_code, comment, reasons)
+        raw_reasons = raw_event.get("reasons", [])
+        reasons = [reason.get("description") for reason in raw_reasons if reason.get("description")]
         event = Event(
-            dt = date,
+            dt=dt,
             city=city,
             country_code=country_code,
             comment=comment,
@@ -139,40 +137,3 @@ def get_events(data: Any) -> list[Event]:
         )
         events.append(event)
     return events
-
-# # Tests
-# tracking_numers = [
-#     1806203236,
-#     1806290829,
-#     1806273700,
-#     1806272330,
-#     1806271886,
-#     1806270433,
-#     1806268072,
-#     1806267579,
-#     1806264568,
-#     1806258974,
-#     1806256390,
-# ]
-
-# for tracking_num in tracking_numers:
-#     data = get_data(tracking_num)
-#     print(get_sender(data))
-#     print(get_reciever(data))
-#     print(get_packages(data))
-#     print(*get_events(data), sep='\n')
-
-# data = get_data(1806203236)
-
-# # with open("data_1.json", "w", encoding="utf-8") as f:
-# #     json.dump(
-# #         data,
-# #         f,
-# #         indent=4,          # readable indentation
-# #         ensure_ascii=False # keep UTF-8 characters
-# #     )
-
-# print(get_sender(data))
-# print(get_reciever(data))
-# print(get_packages(data))
-# print(get_events(data))
