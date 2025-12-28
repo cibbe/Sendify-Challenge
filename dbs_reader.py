@@ -1,16 +1,12 @@
-import json
 import asyncio
 from playwright.async_api import async_playwright
-from dataclasses import dataclass
 from datetime import datetime
 from typing import Optional
-# from __future__ import annotations
-from pydantic import BaseModel, Field, ConfigDict
-from typing import Any, Optional, Literal
+from pydantic import BaseModel,ConfigDict
+from typing import Any, Optional
 from datetime import datetime
 
 # Sender information (name, address)
-
 class Sender(BaseModel):
     model_config = ConfigDict(extra="ignore")
     name: Optional[str] = None

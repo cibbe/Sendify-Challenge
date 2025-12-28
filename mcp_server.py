@@ -1,4 +1,5 @@
 from fastmcp import FastMCP
+import asyncio
 import dbs_reader
 
 mcp = FastMCP("DB Schenker Shipment tracker")
@@ -62,4 +63,4 @@ async def get_info(tracking_number: int) -> dict:
     return info
 
 if __name__ == "__main__":
-    mcp.run_async()
+    asyncio.run(mcp.run_async())
