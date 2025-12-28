@@ -75,3 +75,17 @@ playwright install
 ```bash
 fastmcp run mcp_server.py --transport http --port 8000
 ```
+
+### Add MCP server
+To add the MCP server to your favourite LLM, add this to the MCP settings
+```json
+{
+	"servers": {
+		"sendify_challenge": {
+			"url": "http://localhost:8000/mcp",
+			"type": "http"
+		}
+	},
+	"inputs": []
+}
+```
