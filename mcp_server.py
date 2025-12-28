@@ -51,6 +51,8 @@ async def get_info(tracking_number: int) -> dict:
         data = await dbs_reader.get_data(tracking_number)
     except Exception as exc:
         raise RuntimeError(f"failed to fetch tracking data: {exc}")
+    if isinstance(data, dict) and "error" in data:
+        return {"error": f"An error occurred, tracking number may be invalid.\nPlease double check and try again. If error persists please please check if https://www.dbschenker.com/app/tracking-public/?refNumber={tracking_number} works"}
     info = {}
     sender = dbs_reader.get_sender(data)
     receiver = dbs_reader.get_receiver(data)

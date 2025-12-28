@@ -42,26 +42,39 @@ class Event(BaseModel):
 
 # OUTPUT_FILE = "data.json"
 async def get_data(tracking_id: int) -> Any:
-    async with async_playwright() as p:
-        browser = await p.chromium.launch(headless=True)
-        page = await browser.new_page()
+    try:
+        async with async_playwright() as p:
+            browser = await p.chromium.launch(headless=True)
+            page = await browser.new_page()
 
-        async with page.expect_response(
-            lambda r: "tracking-public/shipments/land/" in r.url and r.status == 200,
-            timeout=30_000
-        ) as resp_info:
-            await page.goto(
-                f"https://www.dbschenker.com/app/tracking-public/?refNumber={tracking_id}",
-                wait_until="domcontentloaded"
-            )
+            async with page.expect_response(
+                lambda r: "tracking-public/shipments/land/" in r.url and r.status == 200,
+                timeout=30_000
+            ) as resp_info:
+                await page.goto(
+                    f"https://www.dbschenker.com/app/tracking-public/?refNumber={tracking_id}",
+                    wait_until="domcontentloaded"
+                )
 
-        response = await resp_info.value
-        data = await response.json()
+            response = await resp_info.value
+            data = await response.json()
 
-        await browser.close()
-        return data
+            await browser.close()
+            
+            # Check if the response indicates an invalid tracking number
+            if data.get("error") or not data.get("events"):
+                return {"error": "Invalid tracking number or no data found"}
+            
+            return data
+    except TimeoutError:
+        return {"error": "Request timed out - tracking number may be invalid"}
+    except Exception as e:
+        return {"error": f"An error occurred: {str(e)}"}
 
 def get_sender(data: Any) -> Sender:
+    if isinstance(data, dict) and "error" in data:
+        return Sender()  # Return empty sender for error case
+    
     name = None
     names = data.get("references", {}).get("shipper")
     if names and len(names) == 1:
@@ -80,6 +93,9 @@ def get_sender(data: Any) -> Sender:
     )
 
 def get_receiver(data: Any) -> Receiver:
+    if isinstance(data, dict) and "error" in data:
+        return Receiver()  # Return empty receiver for error case
+    
     name = None
     deliver = data.get("location", {}).get("deliverTo", {})
     country = deliver.get("country")
@@ -94,6 +110,9 @@ def get_receiver(data: Any) -> Receiver:
         )
 
 def get_packages(data: Any) -> Packages:
+    if isinstance(data, dict) and "error" in data:
+        return Packages()  # Return empty packages for error case
+    
     pieces = data.get("goods", {}).get("pieces")
     weight = data.get("goods", {}).get("weight", {}).get("value")
     weight_unit = data.get("goods", {}).get("weight", {}).get("unit")
@@ -113,6 +132,9 @@ def get_packages(data: Any) -> Packages:
     )
 
 def get_events(data: Any) -> list[Event]:
+    if isinstance(data, dict) and "error" in data:
+        return []  # Return empty list for error case
+    
     raw_events = data.get("events", [])
     events = []
     for raw_event in raw_events:
@@ -137,3 +159,5 @@ def get_events(data: Any) -> list[Event]:
         )
         events.append(event)
     return events
+
+# asyncio.run(get_data(1806258974))
